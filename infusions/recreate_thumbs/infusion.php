@@ -37,7 +37,7 @@ $inf_weburl = "http://www.cwclan.de";
 $inf_folder = "recreate_thumbs";
 
 $inf_adminpanel[1] = array(
-	"title" => $locale['RCT_title'],
+	"title" => $locale['RCT_title_inf'],
 	"image" => "image.gif",
 	"panel" => "recreate_thumbs_admin.php",
 	"rights" => "RCT"
