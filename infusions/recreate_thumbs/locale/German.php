@@ -1,4 +1,5 @@
 <?php
+$locale['RCT_title_inf'] = "recreate thumbs";
 $locale['RCT_title'] = "Vorschau Bilder neu erstellen";
 $locale['RCT_desc'] = "Vorschau Bilder neu erstellen für PHP-Fusion v7";
 $locale['RCT_title_admin'] = " - Administration";

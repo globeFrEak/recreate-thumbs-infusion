@@ -27,7 +27,7 @@ if (file_exists(INFUSIONS."recreate_thumbs/locale/".$settings['locale'].".php"))
 }
 
 // Infusion general information
-$inf_title = $locale['RCT_title'];
+$inf_title = $locale['RCT_title_inf'];
 $inf_description = $locale['RCT_desc'];
 $inf_version = "1.0";
 $inf_developer = "globeFrEak";
