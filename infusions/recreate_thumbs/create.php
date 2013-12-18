@@ -36,6 +36,7 @@ $photo_thumb1 = $photo_name . "_t1" . $photo_ext;
 createthumbnail($imagefile[2], $photo_dest . $photo_file, $photo_dest . $photo_thumb1, $settings['thumb_w'], $settings['thumb_h']);
 $small = "create small Thumb<br>";
 $photo_thumb2 = "";
+$mid = "";
 if ($imagefile[0] > $settings['photo_w'] || $imagefile[1] > $settings['photo_h']) {
     $photo_thumb2 = $photo_name . "_t2" . $photo_ext;
     $mid = "create mid Thumb<br>";
