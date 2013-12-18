@@ -30,7 +30,7 @@ if (file_exists(INFUSIONS . "recreate_thumbs/locale/" . $settings['locale'] . ".
     include INFUSIONS . "recreate_thumbs/locale/English.php";
 }
 // get all photos
-$result = dbquery("SELECT * FROM " . DB_PHOTOS . " LIMIT 1, 10");
+$result = dbquery("SELECT * FROM " . DB_PHOTOS . "");
 $count_photos = dbrows($result);
 
 opentable($locale['RCT_title'] . $locale['RCT_title_admin']);
