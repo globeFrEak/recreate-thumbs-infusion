@@ -1,5 +1,5 @@
 <?php
-$locale['RCT_title_inf'] = "recreate thumbs";
+$locale['RCT_title_inf'] = "Recreate Thumbs";
 $locale['RCT_title'] = "recreate thumbs";
 $locale['RCT_desc'] = "recreate thumbnails on PHP-Fusion v7";
 $locale['RCT_title_admin'] = " - administration";
