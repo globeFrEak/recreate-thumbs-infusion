@@ -30,7 +30,7 @@ if (file_exists(INFUSIONS . "recreate_thumbs/locale/" . $settings['locale'] . ".
     include INFUSIONS . "recreate_thumbs/locale/English.php";
 }
 // get all photos
-$result = dbquery("SELECT * FROM " . DB_PHOTOS . "");
+$result = dbquery("SELECT * FROM " . DB_PHOTOS . " LIMIT 1, 10");
 $count_photos = dbrows($result);
 
 opentable($locale['RCT_title'] . $locale['RCT_title_admin']);
@@ -42,45 +42,65 @@ echo "<td class='tbl2' style='text-align:center'><b>" . $locale['601'] . "</b><b
 echo "<td class='tbl2' style='text-align:center'><b>" . $locale['602'] . "</b><br /><span class='small2'>" . $locale['604'] . "</td>\n";
 echo "<td class='tbl2' style='text-align:center'><b>" . $locale['RCT_count'] . "</b></td>\n";
 echo "</tr>\n<tr>\n";
-echo "<td class='tbl1' style='text-align:center'>" . $settings['thumb_w'] . "x" . $settings['thumb_h'] . " <a href='" . ADMIN . "settings_photo.php$aidlink'>".$locale['RCT_change']."</a></td>\n";
-echo "<td class='tbl1' style='text-align:center'>" . $settings['photo_w'] . "x" . $settings['photo_h'] . " <a href='" . ADMIN . "settings_photo.php$aidlink'>".$locale['RCT_change']."</a></td>\n";
-echo "<td class='tbl1' style='text-align:center'>" . $count_photos . " <a href='" . FUSION_SELF . $aidlink . "&recreate=1'>".$locale['RCT_recreate_all']."</a></td>";
+echo "<td class='tbl1' style='text-align:center'>" . $settings['thumb_w'] . "x" . $settings['thumb_h'] . " <a href='" . ADMIN . "settings_photo.php$aidlink'>" . $locale['RCT_change'] . "</a></td>\n";
+echo "<td class='tbl1' style='text-align:center'>" . $settings['photo_w'] . "x" . $settings['photo_h'] . " <a href='" . ADMIN . "settings_photo.php$aidlink'>" . $locale['RCT_change'] . "</a></td>\n";
+echo "<td class='tbl1' style='text-align:center'>" . $count_photos . " <a href='#' onclick='CREATE()'>" . $locale['RCT_recreate_all'] . "</a></td>";
 echo "\n</tr></table>\n";
-closetable();
 
-if (isset($_GET["recreate"]) && $_GET["recreate"] == 1) {
-// recreate Thumbs 
-    opentable($locale['RCT_title']);
-    add_to_head("<script type=\"text/javascript\">
-function CREATE_THUMBS(id, filename, album_id){    
+$return_json = array();
+while ($data = dbarray($result)) {
+    $row_array['id'] = $data['photo_id'];
+    $row_array['filename'] = $data['photo_filename'];
+    $row_array['album_id'] = $data['album_id'];
+    array_push($return_json, $row_array);
+}
+$json = json_encode($return_json);
+
+add_to_head("<script type=\"text/javascript\">    
+        var rct_json = " . $json . ";       
+        var rct_sum_photos = " . $count_photos . ";
+        var rct_count = 1;        
+function CREATE_THUMBS(data){    
    $.ajax({
         url:'" . INFUSIONS . "recreate_thumbs/create.php',
-        data: {id:id,filename:filename,album_id:album_id},
+        data: {id:data.id, filename:data.filename, album_id:data.album_id},
         datatype:'json',
         type: 'POST',
-        success: function(data) { RESPONSE_THUMBS(data); }
+        success: function(data) { RESPONSE_THUMBS(data); }       
    });
 } 
-function RESPONSE_THUMBS(data) {   
-   var response = $.parseJSON(data);
+function RESPONSE_THUMBS(data) {
+   var response = $.parseJSON(data);   
    var id = response.id;
    var file = response.file;
+   var album = response.album;
+   var thumb = response.thumb;
+   var img = '<img src=\"" . PHOTOS . "' + album + '/' + thumb + '\" alt=\"' + file + '\">';
    var small = (response.small != null ? response.small : '');
-   var mid = (response.mid != null ? response.mid : '');
-   $('body').find('#photo_' + id).first().prepend(file + small + mid);   
+   var mid = (response.mid != null ? response.mid : ''); 
+   $('#photo_progress').empty();
+   $('body').find('#photo_progress').first().prepend(rct_count + '/' + rct_sum_photos);
+   $('body').find('#photo_created').first().prepend(album + '/' + file + '<br>' + rct_count +'/' + rct_sum_photos + '<br>' + small + mid + img +'<hr>');
+   rct_count++;
+}
+function CREATE(){    
+    $('#photo_progress').empty();
+    $('#photo_created').empty();
+    rct_count = 1;
+    var answer = confirm ('" . $locale['RCT_recreate_all_answer'] . "');
+    if (answer) {
+        $('#photos_title').empty();
+        $('body').find('#photo_progress').first().before('<h5 id=\"photos_title\">" . $locale['RCT_recreated'] . "</h5>');
+        $.each(rct_json, function (i, value) {             
+            CREATE_THUMBS(value);                      
+        });        
+    }
+    
 }
 </script>");
-    
-    $i = 1;
-    while ($data = dbarray($result)) {
-        echo $i . "/" . $count_photos . "<br>";
-        echo "<script type=\"text/javascript\">CREATE_THUMBS(" . $i . ",'" . $data['photo_filename'] . "'," . $data['album_id'] . ");</script>";
-        //echo "<button onclick='CREATE_THUMBS(" . $i . ",'" . $data['photo_filename'] . "'," . $data['album_id'] . ")'>START</button>";    
-        echo "<div id='photo_" . $i . "'></div><hr>";
-        $i++;
-    }
-    closetable();
-}
+echo "<div id='photo_progress' style='text-align:center;font-weight:bold;'></div>";
+echo "<div id='photo_created'></div>";
+closetable();
 
 require_once THEMES . "templates/footer.php";
 ?>
