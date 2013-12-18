@@ -44,7 +44,11 @@ echo "<td class='tbl2' style='text-align:center'><b>" . $locale['RCT_count'] . "
 echo "</tr>\n<tr>\n";
 echo "<td class='tbl1' style='text-align:center'>" . $settings['thumb_w'] . "x" . $settings['thumb_h'] . " <a href='" . ADMIN . "settings_photo.php$aidlink'>" . $locale['RCT_change'] . "</a></td>\n";
 echo "<td class='tbl1' style='text-align:center'>" . $settings['photo_w'] . "x" . $settings['photo_h'] . " <a href='" . ADMIN . "settings_photo.php$aidlink'>" . $locale['RCT_change'] . "</a></td>\n";
-echo "<td class='tbl1' style='text-align:center'>" . $count_photos . " <a href='#' onclick='CREATE()'>" . $locale['RCT_recreate_all'] . "</a></td>";
+echo "<td class='tbl1' style='text-align:center'>" . $count_photos . "</td>";
+echo "</tr>\n<tr>\n";
+echo "<td class='tbl2' colspan='3' style='text-align:center;font-size:1.5em;color:red;'>".$locale['RCT_warning']."</td>\n";
+echo "</tr>\n<tr>\n";
+echo "<td class='tbl2' colspan='3' style='text-align:center;font-size:1.5em;color:red;'><button type='button' onclick='CREATE()'>" . $locale['RCT_recreate_all'] . "</button></td>\n";
 echo "\n</tr></table>\n";
 
 $return_json = array();
