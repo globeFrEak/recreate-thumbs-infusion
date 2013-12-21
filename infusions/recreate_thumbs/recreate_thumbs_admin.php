@@ -6,7 +6,7 @@
   | http://www.php-fusion.co.uk/
   +--------------------------------------------------------+
   | Filename: recreate_thumbs_admin.php
-  | Version: 1.00
+  | Version: 1.1
   | Author: globeFrEak (www.cwclan.de)
   +--------------------------------------------------------+
   | This program is released as free software under the
@@ -21,7 +21,7 @@ require_once "../../maincore.php";
 require_once THEMES . "templates/admin_header.php";
 
 if (!checkrights("RCT") || !defined("iAUTH") || $_GET['aid'] != iAUTH) {
-    redirect("../index.php");
+    redirect("../../index.php");
 }
 
 if (file_exists(INFUSIONS . "recreate_thumbs/locale/" . $settings['locale'] . ".php")) {
@@ -30,7 +30,7 @@ if (file_exists(INFUSIONS . "recreate_thumbs/locale/" . $settings['locale'] . ".
     include INFUSIONS . "recreate_thumbs/locale/English.php";
 }
 // get all photos
-$result = dbquery("SELECT * FROM " . DB_PHOTOS . "");
+$result = dbquery("SELECT * FROM " . DB_PHOTOS . " LIMIT 1, 10");
 $count_photos = dbrows($result);
 
 opentable($locale['RCT_title'] . $locale['RCT_title_admin']);
@@ -66,7 +66,7 @@ add_to_head("<script type=\"text/javascript\">
         var rct_count = 1;        
 function CREATE_THUMBS(data){    
    $.ajax({
-        url:'" . INFUSIONS . "recreate_thumbs/create.php',
+        url:'" . INFUSIONS . "recreate_thumbs/create.php".$aidlink."',
         data: {id:data.id, filename:data.filename, album_id:data.album_id},
         datatype:'json',
         type: 'POST',
